@@ -6,6 +6,10 @@ type ReflectItem struct {
 	val    interface{}
 	vType  reflect.Type
 	vValue reflect.Value
+
+	structType reflect.StructField
+
+	father *ReflectItem
 }
 
 func NewReflect(v interface{}) *ReflectItem {
@@ -16,27 +20,38 @@ func NewReflect(v interface{}) *ReflectItem {
 	}
 }
 
+// base
+
 func (r *ReflectItem) GetVal() interface{} {
 	return r.val
 }
 
-func (r *ReflectItem) GetValType() reflect.Type {
+func (r *ReflectItem) GetType() reflect.Type {
 	return r.vType
 }
 
-func (r *ReflectItem) GetValValue() reflect.Value {
+func (r *ReflectItem) GetValue() reflect.Value {
 	return r.vValue
 }
 
-type Field struct {
-	reflect.StructField
-	reflect.Value
+func (r *ReflectItem) GetFather() *ReflectItem {
+	return r.father
 }
 
-func (r *Field) GetValStructField() reflect.StructField {
-	return r.StructField
+func (r *ReflectItem) GetStructType() reflect.StructField {
+	return r.structType
 }
 
-func (r *Field) GetValValue() reflect.Value {
-	return r.Value
+// v1
+
+func (r *ReflectItem) Kind() reflect.Kind {
+	return r.vType.Kind()
+}
+
+func (r *ReflectItem) Elem() *ReflectItem {
+	return &ReflectItem{
+		father: r,
+		vType:  r.vType.Elem(),
+		vValue: r.vValue.Elem(),
+	}
 }
