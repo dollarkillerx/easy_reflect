@@ -18,7 +18,7 @@ func (r *ReflectItem) Struct() (*ReflectStruct, error) {
 		Index:       map[string]int{},
 		TagIndex:    map[string]int{},
 	}
-	if r.Kind() != reflect.Ptr {
+	if r.Kind() == reflect.Ptr {
 		resp.ReflectItem = r.Elem()
 	}
 	if resp.ReflectItem.Kind() != reflect.Struct {
